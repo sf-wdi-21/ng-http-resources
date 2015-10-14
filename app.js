@@ -56,11 +56,10 @@ app.controller('WinesIndexCtrl', ['$scope', 'Wine', function ($scope, Wine) {
 
 }]);
 
-app.controller('WinesShowCtrl', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
-  $scope.wine = {};
-  $http.get('http://daretodiscover.herokuapp.com/wines/' + $routeParams.id)
-    .then(function(response) {
-      $scope.wine = response.data;
-    }
-  );
+app.controller('WinesShowCtrl', ['$scope', 'Wine', '$routeParams', function ($scope, Wine, $routeParams) {
+  
+  Wine.get({id: $routeParams.id}, function(wine) {
+    $scope.wine = wine;
+  })
+
 }]);
