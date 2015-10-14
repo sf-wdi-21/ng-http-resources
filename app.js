@@ -1,13 +1,14 @@
 var app = angular.module('wineApp', ['ngRoute']);
 
-// routes
 app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
-      // some template & some url
+      templateUrl: 'templates/index.html',
+      controller: 'WinesIndexCtrl'
     })
     .when('/wines/:id', {
-      // ...
+      templateUrl: 'templates/show.html',
+      controller: 'WinesShowCtrl'
     })
     .otherwise({
       redirectTo: '/'
@@ -18,37 +19,21 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
     });
 }]);
 
-// wine index controller
 app.controller('WinesIndexCtrl', ['$scope', '$http', function ($scope, $http) {
-  var baseUrl = "http://daretodiscover.herokuapp.com/wines";
   $scope.wines = [];
   $scope.wine = {};
 
-  // get all wines on page load
-  $http.get(baseUrl)
+  $http.get('http://daretodiscover.herokuapp.com/wines')
     .then(function(response) {
-      // success cb
+      $scope.wines = response.data;
     }
   );
 
-  // add a wine on some user action
-  $scope.createWine = function() {
-    // success cb
-  };
-
-  // delete a wine on some user action
-  $scope.deleteWine = function(wine) {
-    // success cb
-  };
-}]);
-
-// wine show controller
 app.controller('WinesShowCtrl', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
-  var baseUrl = "http://daretodiscover.herokuapp.com/wines";
   $scope.wine = {};
-  $http.get(baseUrl + $routeParams.id)
+  $http.get('http://daretodiscover.herokuapp.com/wines/' + $routeParams.id)
     .then(function(response) {
-      // success cb
+      $scope.wine = response.data;
     }
   );
 }]);
