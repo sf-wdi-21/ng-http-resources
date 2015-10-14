@@ -30,7 +30,8 @@ app.controller('WinesIndexCtrl', ['$scope', 'Wine', function ($scope, Wine) {
 
   // get all wines on page load
   Wine.query(function(data) {
-    $scope.wines = data;
+    console.log("test")
+    $scope.wines = data.reverse();
   });
 
   // user can create a new wine
@@ -44,14 +45,15 @@ app.controller('WinesIndexCtrl', ['$scope', 'Wine', function ($scope, Wine) {
     })
   };
 
-  // $scope.deleteWine = function(wine) {
-  //   $http.delete('http://daretodiscover.herokuapp.com/wines/' + wine.id)
-  //     .then(function(response) {
-  //       var wineIndex = $scope.wines.indexOf(wine);
-  //       $scope.wines.splice(wineIndex, 1);
-  //     }
-  //   );
-  // };
+  // user can delete a wine
+  $scope.deleteWine = function(wine) {
+    Wine.remove({id: wine.id}, function(response) {
+      // remove that wine from the wines array
+      var wineIndex = $scope.wines.indexOf(wine);
+      $scope.wines.splice(wineIndex, 1);
+    });
+  };
+
 }]);
 
 app.controller('WinesShowCtrl', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
