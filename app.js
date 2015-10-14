@@ -28,6 +28,7 @@ app.controller('WinesIndexCtrl', ['$scope', '$http', function ($scope, $http) {
       $scope.wines = response.data;
     }
   );
+}]);
 
 app.controller('WinesShowCtrl', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
   $scope.wine = {};
