@@ -1,4 +1,4 @@
-var app = angular.module('wineApp', ['ngRoute']);
+var app = angular.module('wineApp', ['ngRoute', 'ngResource']);
 
 app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
   $routeProvider
@@ -19,36 +19,39 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
     });
 }]);
 
-app.controller('WinesIndexCtrl', ['$scope', '$http', function ($scope, $http) {
+app.factory("Wine", function($resource) {
+  return $resource('http://daretodiscover.herokuapp.com/wines/:id')
+});
+
+app.controller('WinesIndexCtrl', ['$scope', 'Wine', function ($scope, Wine) {
   // variables we will use later
   $scope.wines = [];
   $scope.wine = {};
 
-  $http.get('http://daretodiscover.herokuapp.com/wines')
-    .then(function(response) {
-      // reversed the data to make newest wines appear on top
-      $scope.wines = response.data.reverse();
-    }
-  );
+  // get all wines on page load
+  Wine.query(function(data) {
+    $scope.wines = data;
+  });
 
+  // user can create a new wine
   $scope.createWine = function() {
-    $http.post('http://daretodiscover.herokuapp.com/wines', $scope.wine)
-      .then(function(response) {
-        var newWine = response.data;
-        $scope.wine = {};
-        $scope.wines.unshift(newWine);
-      }
-    );
+    // create a new wine
+    Wine.save($scope.wine, function(newWine) {
+      // clear the form
+      $scope.wine = {};
+      // add the new wine to the list
+      $scope.wines.unshift(newWine);
+    })
   };
 
-  $scope.deleteWine = function(wine) {
-    $http.delete('http://daretodiscover.herokuapp.com/wines/' + wine.id)
-      .then(function(response) {
-        var wineIndex = $scope.wines.indexOf(wine);
-        $scope.wines.splice(wineIndex, 1);
-      }
-    );
-  };
+  // $scope.deleteWine = function(wine) {
+  //   $http.delete('http://daretodiscover.herokuapp.com/wines/' + wine.id)
+  //     .then(function(response) {
+  //       var wineIndex = $scope.wines.indexOf(wine);
+  //       $scope.wines.splice(wineIndex, 1);
+  //     }
+  //   );
+  // };
 }]);
 
 app.controller('WinesShowCtrl', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
