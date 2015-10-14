@@ -1,7 +1,10 @@
 <h2 class="text-center">Wine App</h2>
 <hr>
+<!-- toggle create wine form -->
+<button class="center" ng-init="wineFormVisible=false" ng-click="wineFormVisible=!wineFormVisible">Add a new wine</button>
+<hr>
 <!-- create wine -->
-<form ng-submit="createWine()">
+<form ng-submit="createWine()" ng-show="wineFormVisible">
   <div class="form-group">
     <input type="text" ng-model="wine.name" class="form-control" placeholder="Name" autofocus>
   </div>
@@ -25,6 +28,7 @@
   </div>
   <input type="submit" value="Save Wine" class="btn btn-default">
 </form>
+<hr>
 
 <!-- show all wines -->
 <div ng-repeat="wine in wines">

@@ -20,12 +20,14 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 }]);
 
 app.controller('WinesIndexCtrl', ['$scope', '$http', function ($scope, $http) {
+  // variables we will use later
   $scope.wines = [];
   $scope.wine = {};
 
   $http.get('http://daretodiscover.herokuapp.com/wines')
     .then(function(response) {
-      $scope.wines = response.data;
+      // reversed the data to make newest wines appear on top
+      $scope.wines = response.data.reverse();
     }
   );
 
