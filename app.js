@@ -29,6 +29,26 @@ app.controller('WinesIndexCtrl', ['$scope', '$http', function ($scope, $http) {
     }
   );
 
+  $scope.createWine = function() {
+    $http.post('http://daretodiscover.herokuapp.com/wines', $scope.wine)
+      .then(function(response) {
+        var newWine = response.data;
+        $scope.wine = {};
+        $scope.wines.unshift(newWine);
+      }
+    );
+  };
+
+  $scope.deleteWine = function(wine) {
+    $http.delete('http://daretodiscover.herokuapp.com/wines/' + wine.id)
+      .then(function(response) {
+        var wineIndex = $scope.wines.indexOf(wine);
+        $scope.wines.splice(wineIndex, 1);
+      }
+    );
+  };
+}]);
+
 app.controller('WinesShowCtrl', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
   $scope.wine = {};
   $http.get('http://daretodiscover.herokuapp.com/wines/' + $routeParams.id)
